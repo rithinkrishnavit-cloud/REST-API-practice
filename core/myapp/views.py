@@ -5,15 +5,20 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .models import Student
+
+# Converts and validates student data.
 from .serializers import StudentSerializers
 
 
 # Create your views here.
 @api_view(["GET", "POST"])
 def student_api(request):
+
     if request.method == "GET":
         student = Student.objects.all()
+        # This converts multiple Student objects into a serialized representation.
         serializer = StudentSerializers(student, many=True)
+        # converted student data back to the frontend
         return Response(serializer.data)
 
     if request.method == "POST":
