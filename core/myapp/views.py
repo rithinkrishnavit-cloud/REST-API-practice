@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 
 from rest_framework.decorators import api_view
@@ -28,3 +28,17 @@ def student_api(request):
             return Response(serializer.data)
 
         return Response(serializer.errors)
+
+# only allow delete request
+@api_view(["DELETE"])
+def student_delete(request, id):
+
+    if request.method == "DELETE":
+        student = get_object_or_404(Student, id=id)
+        student.delete()
+        # This sends a message back to the frontend.
+        # dictionary
+        return Response({"message": "Student deleted"})
+
+
+# Response() : takes that dictionary and sends it back as an API response, usually in JSON format.
