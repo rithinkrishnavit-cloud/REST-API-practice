@@ -1,3 +1,4 @@
+from django.db.migrations import serializer
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 
@@ -29,6 +30,7 @@ def student_api(request):
 
         return Response(serializer.errors)
 
+
 # only allow delete request
 @api_view(["DELETE"])
 def student_delete(request, id):
@@ -39,6 +41,20 @@ def student_delete(request, id):
         # This sends a message back to the frontend.
         # dictionary
         return Response({"message": "Student deleted"})
+
+
+@api_view(["PUT"])
+def student_update(request, id):
+
+    student = get_object_or_404(Student, id=id)
+
+    serializer = StudentSerializers(student, data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+
+    return Response(serializer.errors)
 
 
 # Response() : takes that dictionary and sends it back as an API response, usually in JSON format.
