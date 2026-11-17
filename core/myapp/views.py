@@ -52,6 +52,7 @@ def student_update(request, id):
 
     if serializer.is_valid():
         serializer.save()
+        # send updated data in frondend as json
         return Response(serializer.data)
 
     return Response(serializer.errors)
